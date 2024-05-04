@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summarizer</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #bcc8da; /* Gentle background color */
+      color: #424242; /* Simplistic text color */
+      padding-top: 40px;
+      height: 100vh;
+    }
+    .container {
+      max-width: 1200px; /* Wider to accommodate two columns */
+    }
+    .text-input, .summary-result {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px; /* Margin between form sections */
+    }
+    .form-group label {
+      font-weight: bold; /* Bold labels */
+    }
+    #summary-result-text {
+      border: 1px solid #ced4da; /* Similar border as the text input */
+      border-radius: 5px;
+      min-height: 150px;
+      padding: 10px;
+      background-color: #f8f9fa; /* Slightly different background to indicate non-editable */
+      white-space: pre-wrap; /* Maintain line breaks */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mt-4">
+        <h2>Summarizer - <a href="/">Translator</a></h2>
+      </div>
+
+      <!-- New text input form -->
+      <div class="col-md-12 mt-4">
+        <div class="text-input">
+          <form id="summarize-form">
+            <div class="form-group">
+              <label for="summary-text">Enter text to summarize:</label>
+              <textarea id="summary-text" name="summary-text" class="form-control" rows="4" placeholder="Enter text to summarize..."></textarea>
+            </div>
+            <button type="button" id="summarize-button" class="btn btn-primary btn-block">Summarize</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Summary result -->
+      <div class="col-md-12 mt-4">
+        <div class="summary-result">
+          <label for="summary-result-text"><b>Summary result:</b></label>
+          <div id="summary-result-text"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#summarize-button").click(function () {
+        var textValue = $("#summary-text").val().trim();
+        if (textValue === "") {
+          alert("Please enter text to summarize.");
+        } else {
+          $("#summary-result-text").text("Summarizing...");
+          $.ajax({
+            type: "POST",
+            url: "/summarize",
+            data: { text: textValue },
+            success: function (response) {
+              var summary = response.summary;
+              $("#summary-result-text").text(summary);
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

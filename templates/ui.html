@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Translator</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #bcc8da; /* màu nền nhẹ nhàng */
+      color: #424242; /* màu chữ tối giản */
+      padding-top: 40px;
+      height: 100vh;
+    }
+    .container {
+      max-width: 1200px; /* Rộng hơn để chứa hai cột */
+    }
+    .text-input, .translation-result {
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .form-group label {
+      font-weight: bold; /* Đặt chữ đậm cho label */
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12 mt4"> 
+        <h1>ML Project</h1>
+        <h2>Translator - <a href="/summarize">Summarizer</a></h2>
+      </div>
+      <!-- Cột nhập liệu -->
+      <div class="col-md-6">
+        <div class="text-input">
+          <form id="translation-form">
+            <div class="form-group">
+              <label for="source-language">Translate from:</label>
+              <select id="source-language" name="source-language" class="form-control">
+                <option value="English">English</option>
+                <option value="Arabic">Arabic</option>
+              <option value="Czech">Czech</option>
+                <option value="German">German</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Estonian">Estonian</option>
+                <option value="Vietnamese">Vietnamese</option>
+                <option value="Finnish">Finnish</option>
+                <option value="French">French</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Italian">Italian</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Korean">Korean</option>
+                <option value="Lithuanian">Lithuanian</option>
+                <option value="Nepali">Nepali</option>
+                <option value="Russian">Russian</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Afrikaans">Afrikaans</option>
+                <option value="Azerbaijani">Azerbaijani</option>
+                <option value="Bengali">Bengali</option>
+                <option value="Croatian">Croatian</option>
+                <option value="Indonesian">Indonesian</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Thai">Thai</option>
+                <option value="Tagalog">Tagalog</option>
+              <option value="Ukrainian">Ukrainian</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="text">Enter text:</label>
+              <textarea id="text" name="text" class="form-control" rows="4" placeholder="Translate something..."></textarea>
+            </div>
+            <button type="button" id="translate-button" class="btn btn-primary btn-block">Translate</button>
+          </form>
+        </div>
+      </div>
+      <!-- Cột hiển thị kết quả và lựa chọn ngôn ngữ -->
+      <div class="col-md-6">
+        <div class="translation-result">
+          <div class="form-group">
+            <label for="target-language">Translate to:</label>
+            <select id="target-language" name="target-language" class="form-control">
+                <option value="English">English</option>
+              <option value="Arabic">Arabic</option>
+              <option value="Czech">Czech</option>
+                <option value="German">German</option>
+                <option value="Spanish">Spanish</option>
+                <option value="Estonian">Estonian</option>
+                <option value="Vietnamese">Vietnamese</option>
+                <option value="Finnish">Finnish</option>
+                <option value="French">French</option>
+                <option value="Hindi">Hindi</option>
+                <option value="Italian">Italian</option>
+                <option value="Japanese">Japanese</option>
+                <option value="Korean">Korean</option>
+                <option value="Lithuanian">Lithuanian</option>
+                <option value="Nepali">Nepali</option>
+                <option value="Russian">Russian</option>
+                <option value="Chinese">Chinese</option>
+                <option value="Afrikaans">Afrikaans</option>
+                <option value="Azerbaijani">Azerbaijani</option>
+                <option value="Bengali">Bengali</option>
+                <option value="Croatian">Croatian</option>
+                <option value="Indonesian">Indonesian</option>
+                <option value="Malayalam">Malayalam</option>
+                <option value="Thai">Thai</option>
+                <option value="Tagalog">Tagalog</option>
+              <option value="Ukrainian">Ukrainian</option>
+            </select>
+          </div>
+          <label for="translation-result"><b>Translate result:</b></label>
+          <div id="translation-result" class="form-control" style="height: auto; min-height: 150px;">...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-12 mt-4 offset-md-4 mt-4">
+    <div class="team-info">
+      <h4>Team Members:</h4>
+      <ul>
+        <li>Thái Văn Thiên - 20127631</li>
+        <li>Nguyễn Tuấn Anh - 21127216</li>
+        <li>Nguyễn Lê Tuấn Kiệt - 20127253</li>
+        <li>Đào Trọng Nam - 20127244</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $("#translate-button").click(function () {
+        var textValue = $("#text").val().trim();
+        var sourceLang = $("#source-language").val();
+        var targetLang = $("#target-language").val();
+        if (textValue === "") {
+          alert("Please enter text to translate.");
+        } else {
+          $("#translation-result").text("Translating...");
+          $.ajax({
+            type: "POST",
+            url: "/",
+            data: {
+              text: textValue,
+              src_lang: sourceLang,
+              tgt_lang: targetLang
+            },
+            success: function (response) {
+              var translation = response.translation;
+              $("#translation-result").text(translation);
+            },
+          });
+        }
+      });
+    });
+  </script>
+  <script>
+    $(document).ready(function () {
+  // Xử lý sự kiện khi nhấn nút Summarize
+  $("#summarize-button").click(function () {
+    var textValue = $("#summary-text").val().trim();
+    if (textValue === "") {
+      alert("Please enter text to summarize.");
+    } else {
+      $("#summary-result-text").text("Summarizing...");
+      $.ajax({
+        type: "POST",
+        url: "/summarize",
+        data: {
+          text: textValue
+        },
+        success: function (response) {
+          var summary = response.summary;
+          $("#summary-result-text").text(summary);
+          $(".summary-result").show(); // Hiển thị kết quả tóm tắt
+        },
+      });
+    }
+  });
+});
+
+  </script>
+</body>
+</html>
